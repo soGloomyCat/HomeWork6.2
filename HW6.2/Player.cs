@@ -7,12 +7,8 @@ using UnityEngine.Events;
 public class Player : MonoBehaviour
 {
     [SerializeField] private float _startHealth;
-    [SerializeField] private Button _damageButton;
-    [SerializeField] private float _damage;
-    [SerializeField] private Button _healingButton;
-    [SerializeField] private float _heal;
 
-    public event UnityAction Action;
+    public event UnityAction ChangeHealthBarValue;
 
     public float Health { get; private set; }
     public int MinValue { get; private set; }
@@ -25,22 +21,22 @@ public class Player : MonoBehaviour
         MaxValue = 100;
     }
 
-    public void TakeDamage()
+    public void TakeDamage(float damageValue)
     {
         if (Health > 0)
         {
-            Health -= _damage;
-            Action.Invoke();
+            Health -= damageValue;
+            ChangeHealthBarValue.Invoke();
             Debug.Log(Health.ToString());
         }
     }
 
-    public void TakeHeal()
+    public void TakeHeal(float healValue)
     {
         if (Health < 100)
         {
-            Health += _heal;
-            Action.Invoke();
+            Health += healValue;
+            ChangeHealthBarValue.Invoke();
             Debug.Log(Health.ToString());
         }
     }
