@@ -12,15 +12,16 @@ public class HealthBar : MonoBehaviour
     private Slider _slider;
     private Coroutine _coroutine;
     private float _targetValue;
+    private bool _isActive;
 
     private void OnEnable()
     {
-        _player.ChangeHealthBarValue += ChangeHP;
+        _player.HealthHasChanged += ChangeHP;
     }
 
     private void OnDisable()
     {
-        _player.ChangeHealthBarValue -= ChangeHP;
+        _player.HealthHasChanged -= ChangeHP;
     }
 
     private void Start()
@@ -30,19 +31,20 @@ public class HealthBar : MonoBehaviour
         _slider.maxValue = _player.MaxValue;
     }
 
-    private void StopRoutine()
-    {
-        StopCoroutine(_coroutine);
-    }
-
     public void ChangeHP()
     {
+        if (_isActive)
+        {
+            StopCoroutine(_coroutine);
+        }
+
         _coroutine = StartCoroutine(ChangeHealthBar());
     }
 
     private IEnumerator ChangeHealthBar()
     {
-        var waiter = new WaitForSeconds(0.05f);
+        _isActive = true;
+        var waiter = new WaitForSeconds(0.02f);
         _targetValue = _player.Health;
 
         while (_slider.value != _targetValue)
@@ -50,7 +52,5 @@ public class HealthBar : MonoBehaviour
             _slider.value = Mathf.MoveTowards(_slider.value, _targetValue, _changeSpeed * Time.deltaTime);
             yield return waiter;
         }
-
-        StopRoutine();
     }
 }
