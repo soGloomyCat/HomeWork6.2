@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private float _startHealth;
 
-    public event UnityAction ChangeHealthBarValue;
+    public event UnityAction HealthHasChanged;
 
     public float Health { get; private set; }
     public int MinValue { get; private set; }
@@ -23,20 +23,38 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(float damageValue)
     {
-        if (Health > 0)
+        if (Health > MinValue)
         {
-            Health -= damageValue;
-            ChangeHealthBarValue.Invoke();
+            if (Health - damageValue >= 0)
+            {
+                Health -= damageValue;
+                HealthHasChanged?.Invoke();
+            }
+            else
+            {
+                Health = 0;
+                HealthHasChanged?.Invoke();
+            }
+
             Debug.Log(Health.ToString());
         }
     }
 
     public void TakeHeal(float healValue)
     {
-        if (Health < 100)
+        if (Health < MaxValue)
         {
-            Health += healValue;
-            ChangeHealthBarValue.Invoke();
+            if (Health + healValue <= 100)
+            {
+                Health += healValue;
+                HealthHasChanged?.Invoke();
+            }
+            else
+            {
+                Health = 100;
+                HealthHasChanged?.Invoke();
+            }
+            
             Debug.Log(Health.ToString());
         }
     }
