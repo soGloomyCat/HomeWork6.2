@@ -23,39 +23,17 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(float damageValue)
     {
-        if (Health > MinValue)
-        {
-            if (Health - damageValue >= 0)
-            {
-                Health -= damageValue;
-                HealthHasChanged?.Invoke();
-            }
-            else
-            {
-                Health = 0;
-                HealthHasChanged?.Invoke();
-            }
-
-            Debug.Log(Health.ToString());
-        }
+        Health -= damageValue;
+        Health = Mathf.Clamp(Health, MinValue, MaxValue);
+        HealthHasChanged?.Invoke();
+        Debug.Log(Health.ToString());
     }
 
     public void TakeHeal(float healValue)
     {
-        if (Health < MaxValue)
-        {
-            if (Health + healValue <= 100)
-            {
-                Health += healValue;
-                HealthHasChanged?.Invoke();
-            }
-            else
-            {
-                Health = 100;
-                HealthHasChanged?.Invoke();
-            }
-            
-            Debug.Log(Health.ToString());
-        }
+        Health += healValue;
+        Health = Mathf.Clamp(Health, MinValue, MaxValue);
+        HealthHasChanged?.Invoke();
+        Debug.Log(Health.ToString());
     }
 }
