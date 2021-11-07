@@ -8,6 +8,7 @@ public class HealthBar : MonoBehaviour
 {
     [SerializeField] private Player _player;
     [SerializeField] private float _changeSpeed;
+    [SerializeField] private float _waitTime;
 
     private Slider _slider;
     private Coroutine _coroutine;
@@ -44,7 +45,7 @@ public class HealthBar : MonoBehaviour
     private IEnumerator ChangeHealthBar()
     {
         _isActive = true;
-        var waiter = new WaitForSeconds(0.02f);
+        var waiter = new WaitForSeconds(_waitTime);
         _targetValue = _player.Health;
 
         while (_slider.value != _targetValue)
